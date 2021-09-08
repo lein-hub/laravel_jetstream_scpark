@@ -6,6 +6,18 @@
         </div>
         @endif
     </div>
+
+    <section>
+        @if($image)
+        <img src="{{ $image->temporaryUrl() }}" width="200" alt="">
+        @endif
+        <div>
+            @error('image') <span class="error">{{ $message }}</span> @enderror
+        </div>
+        <input type="file" id="image" wire:model="image" wire:loading.attr="disabled">
+        <div wire:loading wire:target="image">File Uploading</div> {{-- 모델(wire:model)을 타겟팅 --}}
+    </section>
+
     <form class="flex my-4" wire:submit.prevent="addComment">
         <input wire:model.lazy="newComment" type="text" class="w-full p-2 my-2 mr-2 border rounded shadow" placeholder="new comment here">
         @error("newComment")
@@ -50,7 +62,7 @@
             </p>
           </div>
           @if($comment->image)
-          <img src="{{ $comment->image }}" alt="">
+          <img src="{{ $comment->image_path }}" alt="">
           @endif
       </div>
       @endforeach
