@@ -24,7 +24,7 @@ class Comments extends Component
 
     protected $rules = [
         'newComment' => 'required',
-        'image' => 'image|max:10240',
+        'image' => 'nullable|image|max:10240',
     ];
 
     public function updated($propertyName)
@@ -35,7 +35,9 @@ class Comments extends Component
     public function remove($commentId)
     {
         $comment = Comment::find($commentId);
-        Storage::disk('public')->delete('images/' . $comment->image);
+        if ($this->image) {
+            Storage::disk('public')->delete('images/' . $comment->image);
+        }
         $comment->delete();
 
         session()->flash("message", "댓글이 성공적으로 삭제 되었습니다.");
@@ -55,7 +57,7 @@ class Comments extends Component
 
     public function addComment()
     {
-        $this->validateOnly('newComment');
+        $this->validate();
         // $comment = new Comment();
         // $comment->user_id = Auth::user()->id;
         // $comment->save();
