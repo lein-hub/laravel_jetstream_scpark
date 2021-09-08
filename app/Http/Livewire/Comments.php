@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -34,6 +35,7 @@ class Comments extends Component
     public function remove($commentId)
     {
         $comment = Comment::find($commentId);
+        Storage::disk('public')->delete('images/' . $comment->image);
         $comment->delete();
 
         session()->flash("message", "댓글이 성공적으로 삭제 되었습니다.");
@@ -77,9 +79,10 @@ class Comments extends Component
 
     protected function storeImage()
     {
-        $this->image = ImageManagerStatic::make($this->image)->encode('jpg');
+        $img = ImageManagerStatic::make($this->image)->resize(200, 100)->encode('jpg');
         $name = Str::random() . '.png';
-        $this->image->storeAs('public/images', $name);
+        // $this->image->storeAs('public/images', $name);
+        Storage::disk('public')->put('images/' . $name, $img);
 
         return $name;
     }
