@@ -21,6 +21,7 @@
         "tailwindcss": "^2.2.2"
     },
     "dependencies": {
+        "@mdi/font": "^6.1.95",
         "daisyui": "^1.14.0",
         "vuex": "^3.6.2"
     }
